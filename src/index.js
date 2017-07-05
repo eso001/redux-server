@@ -8,11 +8,15 @@ import App from './pageContainers/app/AppContainer'
 import reducers, {epics} from './dux'
 
 const epicMiddleware = createEpicMiddleware(epics)
-const store = createStore(reducers, applyMiddleware(epicMiddleware))
+
+const preloadedState = window.__PRELOADED_STATE__
+
+// Allow the passed state to be garbage-collected
+delete window.__PRELOADED_STATE__
+
+const store = createStore(reducers, preloadedState, applyMiddleware(epicMiddleware))
 render(
     <Provider store={store}>
         <App />
     </Provider>,
 document.getElementById('react-container'))
-
-
